@@ -65,10 +65,23 @@ La tasa de abandono disminuye a medida que se aumenta el número de médicos. Co
 
 El uso de los médicos es más alto con menos médicos y mayor tasa de llegadas. Por ejemplo, con 2 médicos y una tasa de llegadas de 0.500, el uso de médicos es de 101.09\%, lo que indica que los médicos están trabajando más allá de su capacidad. Sin embargo, con 6 médicos y una tasa de llegadas de 0.200, el uso promedio de los médicos cae a un 48.12\%, lo que indica que hay médicos subutilizados.
 
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\textwidth]{../results/graficos/medicos.png}
+  \caption{Relación entre el número de médicos, el tiempo de espera, la tasa de abandono y el uso de médicos.}
+  \label{fig:medicos_metricas}
+\end{figure}
+
 \subsection{2. Efecto de la tasa de llegadas de pacientes}
 A mayor tasa de llegadas de pacientes, el tiempo de espera promedio aumenta. Esto es evidente en las simulaciones con 2 médicos: con una tasa de llegadas de 0.500, el tiempo de espera promedio es de 43.17 minutos, mientras que con una tasa de llegadas de 0.200, este tiempo se reduce a 32.43 minutos.
 
 La tasa de abandono es mucho mayor con una tasa de llegadas más alta, como se ve en las simulaciones con 2 médicos y una tasa de llegadas de 0.500, donde la tasa de abandono alcanza un 80.23\%. Con una tasa de llegadas más baja (0.200), la tasa de abandono cae a un 38.33\%.
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\textwidth]{../results/graficos/abandono.png}
+  \caption{Impacto de la tasa de llegadas en el tiempo de espera y la tasa de abandono.}
+  \label{fig:tasa_llegadas_metricas}
+\end{figure}
 
 \subsection{3. Interacción entre el número de médicos y la tasa de llegadas}
 Con menos médicos y una alta tasa de llegadas, el sistema se vuelve muy ineficiente, con tiempos de espera largos y tasas de abandono muy altas. Por ejemplo, con 2 médicos y una tasa de llegadas de 0.500, la tasa de abandono supera el 80\%, y los médicos están prácticamente sobrecargados (uso de 101.09\%).

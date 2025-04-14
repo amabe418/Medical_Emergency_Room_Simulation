@@ -1,0 +1,112 @@
+\documentclass[12pt]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{amsmath}
+\usepackage{booktabs}
+
+\title{Simulación de Eventos Discretos: Sala de Urgencias Hospitalaria}
+\author{Amalia Beatriz Valiente}
+
+
+\begin{document}
+
+\maketitle
+
+\section{Introducción}
+En este proyecto se desarrolla una simulación computacional de una sala de urgencias médicas utilizando técnicas de simulación de eventos discretos. El objetivo principal es modelar y analizar el comportamiento de un servicio de urgencias médicas bajo diferentes condiciones de carga y atención, y evaluar su rendimiento a través de variables clave como el tiempo de espera de los pacientes, la tasa de abandono y el nivel de ocupación del personal médico.
+
+Los hospitales, especialmente las salas de urgencias, suelen enfrentarse con frecuencia a escenarios de alta demanda y recursos limitados. En estas situaciones, una buena planificación y asignación de recursos puede marcar la diferencia entre una atención eficiente y un colapso del sistema. La simulación puede ayudar a entender el flujo de pacientes y explorar estrategias para mejorar servicios que se encuentran en una situación de vulnerabilidad.
+
+El sistema simulado representa una sala de urgencias donde los pacientes llegan de forma aleatoria, son atendidos por médicos disponibles, y dependiendo de su estado pueden ser críticos (prioritarios), requerir derivación a pruebas médicas, o necesitar una segunda consulta con otro médico. Además, si esperan demasiado tiempo sin ser atendidos, pueden abandonar el sistema, lo cual también se mide como un indicador de calidad del servicio. El modelo permite realizar múltiples corridas de simulación para obtener estadísticas robustas, facilitando un análisis más visual y comparativo.
+
+Las variables que describen el problema en esta simulación representan tanto características del sistema como parámetros que afectan su dinámica. Se pueden clasificar en dos grupos: variables de entrada (parámetros del sistema) y variables de salida (resultados o métricas observadas).
+\subsection{Variables de entrada:}
+\begin{itemize}
+  \item \textbf{duracion\_simulacion}: Tiempo total de simulación, en minutos. Ej: 1440 min = 24 horas.
+  \item \textbf{tasa\_llegadas}: Tasa media de llegadas de pacientes.
+  \item \textbf{prioridades}: Lista de niveles de prioridad para los pacientes (1 = más urgente, 5 = menos urgente).
+  \item \textbf{distrib\_prioridad}: Distribución de probabilidad para asignar prioridad a cada paciente.
+  \item \textbf{tiempo\_atencion}: Diccionario que asocia a cada prioridad un tiempo promedio de atención (en minutos).
+  \item \textbf{medicos}: Número de médicos disponibles simultáneamente.
+  \item \textbf{tiempo\_max\_espera}: Tiempo máximo que un paciente está dispuesto a esperar antes de abandonar.
+  \item \textbf{probabilidad\_requiere\_medico\_especifico}: Probabilidad de que un paciente requiera un médico específico (0.3 por defecto).
+  \item \textbf{probabilidad\_examen}: Probabilidad de que, después de la consulta, el paciente necesite un examen (0.2 por defecto).
+  \item \textbf{duracion\_examen\_promedio}: Tiempo promedio que toma un examen médico (en minutos).
+  \item \textbf{probabilidad\_segunda\_consulta}: Probabilidad de que un paciente requiera una segunda atención médica (0.15 por defecto).
+  \item \textbf{probabilidad\_critico}: Probabilidad de que un paciente sea crítico y entre al frente de la cola.
+\end{itemize}
+
+\subsection{Variables de salida:}
+
+\begin{itemize}
+  \item \textbf{esperas}: Lista de tiempos de espera individuales de pacientes atendidos.
+  \item \textbf{abandono}: Número total de pacientes que abandonaron sin ser atendidos.
+  \item \textbf{atendidos}: Número total de pacientes que fueron atendidos completamente.
+  \item \textbf{uso\_medico\_tiempo}: Tiempo total acumulado en que los médicos estuvieron atendiendo pacientes.
+  \item \textbf{espera\_por\_prioridad}: Diccionario con listas de tiempos de espera clasificados por prioridad.
+  \item \textbf{abandono\_por\_prioridad}: Diccionario con número de abandonos clasificados por prioridad.
+  \item \textbf{atendidos\_por\_prioridad}: Diccionario con número de pacientes atendidos clasificados por prioridad.
+  \item \textbf{pacientes\_criticos}: Cantidad total de pacientes que fueron considerados críticos durante la simulación.
+  \item \textbf{examenes}: Número de exámenes realizados en total (inicializado implícitamente en \texttt{procesar\_fin\_examen}).
+\end{itemize}
+
+
+\section{Resultados e Interpretación}
+Los resultados de las simulaciones muestran varios hallazgos interesantes respecto al comportamiento del sistema de urgencias médicas, especialmente en cuanto a la relación entre el número de médicos disponibles y la tasa de llegadas de pacientes. A continuación, se resumen los hallazgos clave:
+
+\subsection{1. Efecto del número de médicos en las métricas clave}
+A medida que aumentan el número de médicos disponibles, el tiempo de espera promedio disminuye significativamente. Por ejemplo, con 2 médicos y una tasa de llegadas de 0.200, el tiempo de espera promedio es de 32.43 minutos, mientras que con 6 médicos y la misma tasa de llegadas, el tiempo de espera promedio se reduce a solo 4.99 minutos.
+
+La tasa de abandono disminuye a medida que se aumenta el número de médicos. Con 2 médicos, la tasa de abandono puede superar el 80\% en algunos escenarios, mientras que con 6 médicos, la tasa de abandono cae por debajo del 1\% en la mayoría de las simulaciones.
+
+El uso de los médicos es más alto con menos médicos y mayor tasa de llegadas. Por ejemplo, con 2 médicos y una tasa de llegadas de 0.500, el uso de médicos es de 101.09\%, lo que indica que los médicos están trabajando más allá de su capacidad. Sin embargo, con 6 médicos y una tasa de llegadas de 0.200, el uso promedio de los médicos cae a un 48.12\%, lo que indica que hay médicos subutilizados.
+
+\subsection{2. Efecto de la tasa de llegadas de pacientes}
+A mayor tasa de llegadas de pacientes, el tiempo de espera promedio aumenta. Esto es evidente en las simulaciones con 2 médicos: con una tasa de llegadas de 0.500, el tiempo de espera promedio es de 43.17 minutos, mientras que con una tasa de llegadas de 0.200, este tiempo se reduce a 32.43 minutos.
+
+La tasa de abandono es mucho mayor con una tasa de llegadas más alta, como se ve en las simulaciones con 2 médicos y una tasa de llegadas de 0.500, donde la tasa de abandono alcanza un 80.23\%. Con una tasa de llegadas más baja (0.200), la tasa de abandono cae a un 38.33\%.
+
+\subsection{3. Interacción entre el número de médicos y la tasa de llegadas}
+Con menos médicos y una alta tasa de llegadas, el sistema se vuelve muy ineficiente, con tiempos de espera largos y tasas de abandono muy altas. Por ejemplo, con 2 médicos y una tasa de llegadas de 0.500, la tasa de abandono supera el 80\%, y los médicos están prácticamente sobrecargados (uso de 101.09\%).
+
+Con más médicos y una tasa de llegadas baja, los médicos están subutilizados, lo que reduce tanto el tiempo de espera como la tasa de abandono. Por ejemplo, con 6 médicos y una tasa de llegadas de 0.200, el uso de médicos es solo un 48.12\%, lo que sugiere que hay suficiente capacidad en el sistema para manejar a los pacientes sin congestionar los recursos.
+
+\subsection{4. Optimización del sistema}
+Los resultados sugieren que la optimización del número de médicos debe basarse en la tasa de llegadas de pacientes. Cuando la tasa de llegadas es alta, se necesita más personal para evitar que el sistema se colapse. Sin embargo, cuando la tasa de llegadas es baja, un número excesivo de médicos puede resultar en recursos subutilizados.
+
+\subsection{5. Hallazgos clave}
+Con más médicos, los tiempos de espera y las tasas de abandono disminuyen, pero los médicos pueden estar subutilizados si la tasa de llegadas de pacientes es baja.
+
+Con menos médicos y una alta tasa de llegadas, el sistema se congestiona, aumentando los tiempos de espera y las tasas de abandono.
+
+La tasa de abandono es más sensible al número de médicos y a la tasa de llegadas: más médicos y menos llegadas tienden a minimizar el abandon
+
+\section{Hipótesis extraídas de los resultados}
+
+A partir del análisis de los resultados obtenidos en las simulaciones, se identificaron patrones consistentes en el comportamiento del sistema bajo diferentes configuraciones de parámetros. Estos patrones permitieron formular las siguientes hipótesis sobre el funcionamiento de una sala de urgencias médicas:
+
+\begin{itemize}
+    \item \textbf{Relación médicos-demanda:} Existe un umbral óptimo de médicos para cada nivel de demanda. Aumentar la cantidad de médicos reduce la espera y el abandono hasta cierto punto, pero más allá de ese umbral, los recursos comienzan a subutilizarse sin mejorar significativamente los indicadores.
+
+    \item \textbf{Impacto de la tasa de llegadas:} Una mayor tasa de llegadas incrementa significativamente la carga sobre el sistema, lo que se refleja en mayores tiempos de espera y tasas de abandono. Cuando la demanda supera la capacidad del sistema, el rendimiento se degrada rápidamente.
+
+    \item \textbf{Eficiencia versus subutilización:} En condiciones de baja demanda, mantener un número alto de médicos genera baja utilización de recursos. Esto sugiere que se puede operar eficientemente con menos médicos sin afectar negativamente la atención.
+
+    \item \textbf{Estabilidad operativa:} Los resultados mostraron que con más médicos, la variabilidad entre simulaciones disminuye. Esto indica una mayor estabilidad del sistema frente a fluctuaciones en la llegada de pacientes.
+\end{itemize}
+
+\section{Conclusiones}
+
+Este proyecto de simulación de una sala de urgencias médicas permitió analizar cómo diferentes parámetros, como el número de médicos y la tasa de llegada de pacientes, afectan el rendimiento del sistema. A través de múltiples simulaciones, se encontró que a mayor cantidad de médicos, los tiempos de espera y la tasa de abandono disminuían significativamente, mejorando la atención de los pacientes. Sin embargo, se observó que cuando la tasa de llegada de pacientes era baja, los médicos no se utilizaban al máximo, lo que indicaba una subutilización de recursos.
+
+La tasa de abandono también fue un indicador clave: en escenarios con menos médicos y mayor demanda, los pacientes tenían más probabilidades de abandonar el sistema. Esto subraya la importancia de gestionar bien los flujos de pacientes para evitar saturaciones. A pesar de que aumentar el número de médicos mejoraba la eficiencia, se llegó a la conclusión de que después de un punto de saturación, agregar más médicos no generaba mejoras significativas.
+
+A lo largo de las simulaciones, se destacó la necesidad de tomar decisiones basadas en datos para optimizar el uso de recursos y garantizar una atención oportuna. A medida que el sistema se escalaba para adaptarse a diferentes tamaños de hospitales, se hizo evidente que un modelo flexible y ajustable podría ser la clave para mejorar tanto la calidad de la atención como la eficiencia operativa en cualquier contexto.
+
+Finalmente, el análisis resaltó la importancia de ajustar dinámicamente los recursos en función de la demanda y priorizar la atención a pacientes críticos para reducir los tiempos de espera y mejorar la experiencia del paciente. Con estas recomendaciones, el proyecto ofrece una herramienta útil para la planificación y gestión eficiente de los sistemas de urgencias médicas.
+
+\end{document}
